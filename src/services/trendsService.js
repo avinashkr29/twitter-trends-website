@@ -23,7 +23,7 @@ const getTrendsJsonUrl = (country = 'worldwide') => {
   return `https://api.allorigins.win/raw?url=${encodeURIComponent(originalUrl)}`;
 };
 
-// Parse JSON data to structured format - replaces the CSV parsing function
+// Function to parse JSON data to structured format
 const parseJsonToTrends = (jsonData) => {
   // Make sure the data is an array before using it
   if (!Array.isArray(jsonData)) {
@@ -31,13 +31,21 @@ const parseJsonToTrends = (jsonData) => {
     return [];
   }
   
-  // Map JSON data to our trends format
-  return jsonData.map((item, index) => ({
+  // Filter out any entries that aren't valid trend data
+  // (like the last entry which is a note about the data)
+  const validTrends = jsonData.filter(item => 
+    item["Original Topic/Hashtag (combined)"] && 
+    item["Original Topic/Hashtag (combined)"].length > 0 && 
+    typeof item["Original Topic/Hashtag (combined)"] === "string"
+  );
+  
+  // Map JSON data to our trends format with correct field names
+  return validTrends.map((item, index) => ({
     id: `trend-${index + 1}`,
-    originalTopic: item['Original Topic/Hashtag (combined)'],
-    englishTranslation: item['English Translation (if applicable)'],
-    whyTrending: item['Why is it Trending Now?'],
-    context: item['Detailed Context and Background'],
+    originalTopic: item["Original Topic/Hashtag (combined)"],
+    englishTranslation: item["English Translation"],
+    whyTrending: item["Why is it trending now?"],
+    context: item["Detailed context and background"],
     timestamp: new Date().getTime(),
     trendScore: 90 + Math.floor(Math.random() * 10) // Random score between 90-99
   }));
