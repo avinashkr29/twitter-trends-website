@@ -1,4 +1,4 @@
-# Twitter Trends Japan
+# What is Trending?
 
 A web application that displays Twitter trends from Japan, with data stored in Firebase Firestore and updated daily.
 
@@ -44,3 +44,6 @@ The application expects data in Firestore with the following structure:
 ## License
 
 MIT
+
+## How to run
+npm run deploy #deploys in the 

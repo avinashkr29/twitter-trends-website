@@ -1,7 +1,7 @@
 // src_components_Header.js
 import React, { useState, useEffect } from 'react';
 
-function Header({ selectedCountry, onCountryChange, metadata }) {
+function Header({ selectedCountry, onCountryChange, metadata, onRefreshData }) {
   const [lastRefreshTime, setLastRefreshTime] = useState('');
   const [sourceTime, setSourceTime] = useState('');
   
@@ -44,17 +44,19 @@ function Header({ selectedCountry, onCountryChange, metadata }) {
   }, [selectedCountry, metadata]);
   
   const handleReset = () => {
-    // Don't remove timestamp data here, just the cache
+    // Remove cache for ONLY the selected country
     localStorage.removeItem(`twitter_trends_cache_${selectedCountry}`);
     localStorage.removeItem(`twitter_trends_timestamp_${selectedCountry}`);
-    // Force the app to fetch fresh data without losing the UI state
-    window.location.reload();
+    localStorage.removeItem(`twitter_trends_metadata_${selectedCountry}`);
+    
+    // Call onRefreshData with the currently selected country
+    onRefreshData(selectedCountry);
   };
   
   return (
     <header className="header">
       <div className="container">
-        <h1>Twitter Trends Japan</h1>
+        <h1>What is Trending?</h1>
         <div className="refresh-info">
           <span>Last fetched: {lastRefreshTime}</span>
           {sourceTime && (
