@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/twitter-trends-website/static/css/main.e05138a9.css",
-    "main.js": "/twitter-trends-website/static/js/main.8dc2dcb3.js",
+    "main.css": "/twitter-trends-website/static/css/main.81cc0a21.css",
+    "main.js": "/twitter-trends-website/static/js/main.33d7dd6f.js",
     "index.html": "/twitter-trends-website/index.html",
-    "main.e05138a9.css.map": "/twitter-trends-website/static/css/main.e05138a9.css.map",
-    "main.8dc2dcb3.js.map": "/twitter-trends-website/static/js/main.8dc2dcb3.js.map"
+    "main.81cc0a21.css.map": "/twitter-trends-website/static/css/main.81cc0a21.css.map",
+    "main.33d7dd6f.js.map": "/twitter-trends-website/static/js/main.33d7dd6f.js.map"
   },
   "entrypoints": [
-    "static/css/main.e05138a9.css",
-    "static/js/main.8dc2dcb3.js"
+    "static/css/main.81cc0a21.css",
+    "static/js/main.33d7dd6f.js"
   ]
 }
