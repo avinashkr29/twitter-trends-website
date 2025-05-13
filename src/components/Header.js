@@ -1,10 +1,53 @@
 // src_components_Header.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-function Header({ selectedCountry, onCountryChange }) {
+function Header({ selectedCountry, onCountryChange, metadata }) {
+  const [lastRefreshTime, setLastRefreshTime] = useState('');
+  const [sourceTime, setSourceTime] = useState('');
+  
+  useEffect(() => {
+    // Function to update the displayed timestamps
+    const updateTimestamps = () => {
+      const timestamp = localStorage.getItem(`twitter_trends_cache_${selectedCountry}_readable`);
+      setLastRefreshTime(timestamp || 'Never');
+      
+      // Try to get metadata timestamp from localStorage
+      const metadataKey = `twitter_trends_metadata_${selectedCountry}`;
+      const storedMetadata = localStorage.getItem(metadataKey);
+      
+      if (storedMetadata) {
+        try {
+          const parsedMetadata = JSON.parse(storedMetadata);
+          if (parsedMetadata && parsedMetadata.timestamp) {
+            const metadataDate = new Date(parsedMetadata.timestamp);
+            setSourceTime(metadataDate.toLocaleString());
+          } else {
+            setSourceTime('Unknown');
+          }
+        } catch (e) {
+          console.error('Error parsing metadata:', e);
+          setSourceTime('Unknown');
+        }
+      } else {
+        setSourceTime('Unknown');
+      }
+    };
+    
+    // Set initially
+    updateTimestamps();
+    
+    // Set up a timer to check periodically (every 5 seconds)
+    const timer = setInterval(updateTimestamps, 5000);
+    
+    // Clean up on unmount
+    return () => clearInterval(timer);
+  }, [selectedCountry, metadata]);
+  
   const handleReset = () => {
-    localStorage.removeItem('twitter_trends_cache');
-    localStorage.removeItem('twitter_trends_timestamp');
+    // Don't remove timestamp data here, just the cache
+    localStorage.removeItem(`twitter_trends_cache_${selectedCountry}`);
+    localStorage.removeItem(`twitter_trends_timestamp_${selectedCountry}`);
+    // Force the app to fetch fresh data without losing the UI state
     window.location.reload();
   };
   
@@ -12,6 +55,14 @@ function Header({ selectedCountry, onCountryChange }) {
     <header className="header">
       <div className="container">
         <h1>Twitter Trends Japan</h1>
+        <div className="refresh-info">
+          <span>Last fetched: {lastRefreshTime}</span>
+          {sourceTime && (
+            <div className="source-time">
+              <span>Data timestamp: {sourceTime}</span>
+            </div>
+          )}
+        </div>
         <div className="controls-right">
           <div className="country-selector">
             <select 

@@ -14,14 +14,16 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('latest');
   const [selectedCountry, setSelectedCountry] = useState('worldwide');
+  const [metadata, setMetadata] = useState(null);
   
   useEffect(() => {
     const loadTrends = async () => {
       try {
         setLoading(true);
-        const data = await fetchTrends(selectedCountry);
-        setTrends(data);
-        setFilteredTrends(data);
+        const { trends, metadata } = await fetchTrends(selectedCountry);
+        setTrends(trends);
+        setFilteredTrends(trends);
+        setMetadata(metadata);
       } catch (err) {
         setError('Failed to load trends. Please try again later.');
         console.error(err);
@@ -31,7 +33,7 @@ function App() {
     };
     
     loadTrends();
-  }, [selectedCountry]); // Re-fetch when country changes
+  }, [selectedCountry]);  // Re-fetch when country changes
   
   useEffect(() => {
     // Apply search and sort whenever these change
@@ -75,8 +77,9 @@ function App() {
   return (
     <div className="app">
       <Header 
-        selectedCountry={selectedCountry} 
+        selectedCountry={selectedCountry}
         onCountryChange={handleCountryChange}
+        metadata={metadata}
       />
       <div className="container">
         <div className="controls">
